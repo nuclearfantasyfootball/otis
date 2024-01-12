@@ -1,0 +1,7 @@
+# Git Specified Files and Directories to Ignore
+
+# VSCode
+**/__pycache__
+
+# macOS
+*.DS_Store
