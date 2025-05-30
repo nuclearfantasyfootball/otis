@@ -1,8 +1,8 @@
 Package: otis
 Title: Optimization Toolkit Integrating Sleeper (OTIS)
 Version: 0.0.1
-Authors@R: 
-    person("Nolan", "MacDonald", , "nolan@nuclearfantasy.football, role = c("aut", "cre"))
+Authors@R: person("Nolan", "MacDonald", email = "nolan@nuclearfantasy.football",
+  role = c("aut", "cre"))
 Description: OTIS integrates Sleeper fantasy football and fantasy analysis with
     the Sleeper API and capabilities for fantasy football analysis
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
@@ -15,9 +15,11 @@ Imports:
     glue,
     httr,
     jsonlite,
+    logging,
     purrr,
     rlang,
     RSQLite,
+    stringr,
     tibble,
     tidyr,
     usethis
@@ -27,7 +29,7 @@ Suggests:
     rmarkdown,
     pacman,
     roxygen2,
-    styler
+    styler,
     testthat
 Depends: 
     R (>= 4.1.0)
