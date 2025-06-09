@@ -24,12 +24,12 @@ NULL
 #' validate_tx_type("invalid")  # Shows message, returns NULL
 #' }
 validate_tx_type <- function(tx_type) {
-  log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
+  otis::log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
 
   # Input validation
   if (!rlang::is_null(tx_type)) {
     if (!is.character(tx_type) || length(tx_type) != 1) {
-      log_error("tx_type must be a single character string or NULL")
+      otis::log_error("tx_type must be a single character string or NULL")
     }
   }
 
@@ -43,12 +43,12 @@ validate_tx_type <- function(tx_type) {
 
   # Check validation and return appropriate value
   if (is_valid_tx_type(tx_type)) {
-    log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
+    otis::log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
     return(tx_type)
   } else {
     valid_types_str <- paste(valid_tx_types, collapse = ', ')
-    log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
-    log_info("Returning NULL (for unfiltered transactions)")
+    otis::log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
+    otis::log_info("Returning NULL (for unfiltered transactions)")
     return(NULL)
   }
 }
@@ -65,26 +65,26 @@ validate_tx_type <- function(tx_type) {
 #' league_data <- get_specific_league("123456789")
 #' }
 get_specific_league <- function(league_id) {
-  log_debug("Starting get_specific_league with league_id: {league_id}")
+  otis::log_debug("Starting get_specific_league with league_id: {league_id}")
 
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch specific league from Sleeper API
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}")
-  log_debug("Fetching specific league data from endpoint: {url}")
+  otis::log_debug("Fetching specific league data from endpoint: {url}")
 
   response <- httr::GET(url)
   status_sleeper_api(response)
 
   # Extract/parse content
-  log_debug("Extracting content from request")
+  otis::log_debug("Extracting content from request")
   content <- httr::content(response, "text", encoding = "UTF-8")
 
   # Convert to tibble
-  log_debug("Converting R objects to tibble")
+  otis::log_debug("Converting R objects to tibble")
   result <- content |>
     jsonlite::fromJSON() |>
     tibble::tibble()
@@ -95,7 +95,7 @@ get_specific_league <- function(league_id) {
       tidyr::unnest_wider(1, names_sep = "_")
   }
 
-  log_info("Successfully retrieved league data for league_id: {league_id}")
+  otis::log_info("Successfully retrieved league data for league_id: {league_id}")
   return(result)
 }
 
@@ -111,39 +111,53 @@ get_specific_league <- function(league_id) {
 #' users_data <- get_league_users("123456789")
 #' }
 get_league_users <- function(league_id) {
-  log_debug("Starting get_league_users with league_id: {league_id}")
+  otis::log_debug("Starting get_league_users with league_id: {league_id}")
 
   # Input validation
-  if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+  if (!is.character(league_id) || length(league_id) != 1L || nchar(league_id) == 0L) {
+    otis::log_error("league_id must be a non-empty character string")
   }
 
-  # Fetch specific league users from Sleeper API
+  # Construct URL and make request
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}/users")
-  log_debug("Fetching all league users from endpoint: {url}")
+  otis::log_info("Fetching all league users from endpoint: {url}")
 
-  response <- httr::GET(url)
+  response <- tryCatch({
+    httr::GET(url)
+  }, error = function(e) {
+    otis::log_error("Failed to make HTTP request: {e$message}")
+  })
+
   status_sleeper_api(response)
 
-  # Extract/parse content
-  log_debug("Extracting content from request")
+  # Extract and parse content
+  otis::log_debug("Extracting content from users request")
   content <- httr::content(response, "text", encoding = "UTF-8")
 
-  # Convert to tibble and unnest
-  log_debug("Converting R objects to tibble")
-  users <- content |>
-    jsonlite::fromJSON() |>
-    tibble::tibble()
+  # Convert to tibble
+  otis::log_debug("Converting users response to tibble")
+  users_data <- tryCatch({
+    parsed_data <- jsonlite::fromJSON(content)
 
-  # Handle case where there might be nested data
-  if (ncol(users) == 1 && is.list(users[[1]])) {
-    users <- users |>
-      tidyr::unnest_wider(1, names_sep = "_")
-  }
+    if (length(parsed_data) == 0L) {
+      otis::log_info("No users found for league_id: {league_id}")
+      return(tibble::tibble())
+    }
 
-  user_count <- nrow(users)
-  log_info("Successfully retrieved {user_count} users for league_id: {league_id}")
-  return(users)
+    # Convert to tibble
+    result <- tibble::as_tibble(parsed_data)
+
+    # Add league_id for reference
+    result |>
+      dplyr::mutate(league_id = league_id, .before = 1L)
+
+  }, error = function(e) {
+    otis::log_error("Failed to parse users response: {e$message}")
+  })
+
+  user_count <- nrow(users_data)
+  otis::log_info("Successfully retrieved {user_count} users for league_id: {league_id}")
+  return(users_data)
 }
 
 #' Get league rosters information
@@ -158,26 +172,26 @@ get_league_users <- function(league_id) {
 #' rosters_data <- get_league_rosters("123456789")
 #' }
 get_league_rosters <- function(league_id) {
-  log_debug("Starting get_league_rosters with league_id: {league_id}")
+  otis::log_debug("Starting get_league_rosters with league_id: {league_id}")
 
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch specific league rosters from Sleeper API
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}/rosters")
-  log_debug("Fetching all league rosters from endpoint: {url}")
+  otis::log_debug("Fetching all league rosters from endpoint: {url}")
 
   response <- httr::GET(url)
   status_sleeper_api(response)
 
   # Extract/parse content
-  log_debug("Extracting content from request")
+  otis::log_debug("Extracting content from request")
   content <- httr::content(response, "text", encoding = "UTF-8")
 
   # Convert to tibble
-  log_debug("Converting R objects to tibble")
+  otis::log_debug("Converting R objects to tibble")
   rosters <- content |>
     jsonlite::fromJSON() |>
     tibble::tibble()
@@ -189,7 +203,7 @@ get_league_rosters <- function(league_id) {
   }
 
   roster_count <- nrow(rosters)
-  log_info("Successfully retrieved {roster_count} rosters for league_id: {league_id}")
+  otis::log_info("Successfully retrieved {roster_count} rosters for league_id: {league_id}")
   return(rosters)
 }
 
@@ -206,30 +220,30 @@ get_league_rosters <- function(league_id) {
 #' matchups_data <- get_league_matchups("123456789", 5)
 #' }
 get_league_matchups <- function(league_id, week) {
-  log_debug("Starting get_league_matchups with league_id: {league_id}, week: {week}")
+  otis::log_debug("Starting get_league_matchups with league_id: {league_id}, week: {week}")
 
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   if (!is.numeric(week) || length(week) != 1 || week < 1 || week > 18) {
-    log_error("week must be a single integer between 1 and 18")
+    otis::log_error("week must be a single integer between 1 and 18")
   }
 
   # Fetch specific league matchups from Sleeper API
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}/matchups/{week}")
-  log_debug("Fetching all league matchups for week {week} from endpoint: {url}")
+  otis::log_debug("Fetching all league matchups for week {week} from endpoint: {url}")
 
   response <- httr::GET(url)
   status_sleeper_api(response)
 
   # Extract/parse content
-  log_debug("Extracting content from request")
+  otis::log_debug("Extracting content from request")
   content <- httr::content(response, "text", encoding = "UTF-8")
 
   # Convert to tibble
-  log_debug("Converting R objects to tibble")
+  otis::log_debug("Converting R objects to tibble")
   matchups <- content |>
     jsonlite::fromJSON() |>
     tibble::tibble()
@@ -244,7 +258,7 @@ get_league_matchups <- function(league_id, week) {
   matchups$week <- week
 
   matchup_count <- nrow(matchups)
-  log_info("Successfully retrieved {matchup_count} matchups for week {week}, league_id: {league_id}")
+  otis::log_info("Successfully retrieved {matchup_count} matchups for week {week}, league_id: {league_id}")
   return(matchups)
 }
 
@@ -270,37 +284,37 @@ get_league_matchups <- function(league_id, week) {
 #' }
 get_league_transactions_week <- function(league_id, week, tx_type = NULL) {
   tx_type_str <- tx_type %||% "NULL"
-  log_debug("Starting get_league_transactions_week with league_id: {league_id}, week: {week}, tx_type: {tx_type_str}")
+  otis::log_debug("Starting get_league_transactions_week with league_id: {league_id}, week: {week}, tx_type: {tx_type_str}")
 
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   if (!is.numeric(week) || length(week) != 1 || week < 1 || week > 18) {
-    log_error("week must be a single integer between 1 and 18")
+    otis::log_error("week must be a single integer between 1 and 18")
   }
 
   # Fetch specific league transactions from Sleeper API
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}/transactions/{week}")
-  log_debug("Fetching all league transactions for week {week} from endpoint: {url}")
+  otis::log_debug("Fetching all league transactions for week {week} from endpoint: {url}")
 
   response <- httr::GET(url)
   status_sleeper_api(response)
 
   # Extract/parse content
-  log_debug("Extracting content from request")
+  otis::log_debug("Extracting content from request")
   content <- httr::content(response, "text", encoding = "UTF-8")
 
   # Convert to tibble
-  log_debug("Converting R objects to tibble")
+  otis::log_debug("Converting R objects to tibble")
   transactions <- content |>
     jsonlite::fromJSON() |>
     tibble::tibble()
 
   # Handle empty response
   if (nrow(transactions) == 0) {
-    log_info("No transactions found for week {week} in league_id: {league_id}")
+    otis::log_info("No transactions found for week {week} in league_id: {league_id}")
     return(tibble::tibble())
   }
 
@@ -318,13 +332,13 @@ get_league_transactions_week <- function(league_id, week, tx_type = NULL) {
     transactions <- transactions |>
       dplyr::filter(type == validated_tx_type)
     filtered_count <- nrow(transactions)
-    log_debug("Filtered transactions from {original_count} to {filtered_count} for type: {validated_tx_type}")
+    otis::log_debug("Filtered transactions from {original_count} to {filtered_count} for type: {validated_tx_type}")
   }
 
   # Add week info
   transactions$week <- week
 
   transaction_count <- nrow(transactions)
-  log_info("Successfully retrieved {transaction_count} transactions for week {week}, league_id: {league_id}")
+  otis::log_info("Successfully retrieved {transaction_count} transactions for week {week}, league_id: {league_id}")
   return(transactions)
 }
