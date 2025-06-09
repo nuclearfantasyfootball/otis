@@ -42,7 +42,7 @@ league_users_details <- function(league_id) {
     dplyr::select(
       league_id, user_id, display_name,
       is_bot, is_owner,
-      user_avatar_id = avatar_1, # Used to get user avatar, not team
+      user_avatar_id = avatar, # Used to get user avatar, not team
       metadata_avatar, # https://sleepercdn.com/uploads/<avatar_id>.jpg
       metadata_team_name,
       # User push notifications

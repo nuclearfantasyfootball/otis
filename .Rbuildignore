@@ -2,4 +2,4 @@
 ^renv\.lock$
 ^otis\.Rproj$
 ^\.Rproj\.user$
-dev/
+^dev$
