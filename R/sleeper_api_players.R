@@ -2,11 +2,11 @@
 # Warning! All player data should be fetched sparingly. The file is ~15 mb.
 
 # Load required packages
-pacman::p_load(httr, jsonlite, dplyr, glue, progress, tibble, purrr, RSQLite)
+# pacman::p_load(httr, jsonlite, dplyr, glue, progress, tibble, purrr, RSQLite)
 
 # Helper functions - Remove for package after development
-source("./R/utils_logging.R")
-source("./R/utils_sleeper_api.R")
+# source("./R/utils_logging.R")
+# source("./R/utils_sleeper_api.R")
 
 #' Fetch all NFL players from Sleeper API
 #'

@@ -1,6 +1,6 @@
 Package: otis
 Title: Optimization Toolkit Integrating Sleeper (OTIS)
-Version: 0.0.1
+Version: 0.0.0.9000
 Authors@R: person("Nolan", "MacDonald", email = "nolan@nuclearfantasy.football",
   role = c("aut", "cre"))
 Description: OTIS integrates Sleeper fantasy football and fantasy analysis with

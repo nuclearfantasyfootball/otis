@@ -30,7 +30,10 @@ get_all_user_drafts <- function(user_id, season) {
 
   # Return the response content
   log_info("Converting user draft data R objects to JSON.")
-  return(jsonlite::fromJSON(content))
+  json <- jsonlite::fromJSON(content)
+
+  log_info("Returning traded draft picks as tibble.")
+  return(tibble::as_tibble(json))
 }
 
 #' @title Get all drafts for a specific league
@@ -63,7 +66,10 @@ get_all_league_drafts <- function(league_id) {
 
   # Return the response content
   log_info("Converting all league draft data R objects to JSON.")
-  return(jsonlite::fromJSON(content))
+  json <- jsonlite::fromJSON(content)
+
+  log_info("Returning traded draft picks as tibble.")
+  return(tibble::as_tibble(json))
 }
 
 #' @title Get data for a specific draft
@@ -125,7 +131,10 @@ get_all_draft_picks <- function(draft_id) {
 
   # Return the response content
   log_info("Converting all draft picks R objects to JSON.")
-  return(jsonlite::fromJSON(content))
+  json <- jsonlite::fromJSON(content)
+
+  log_info("Returning traded draft picks as tibble.")
+  return(tibble::as_tibble(json))
 }
 
 #' @title Get traded draft picks for a specific draft
@@ -156,5 +165,11 @@ get_traded_draft_picks <- function(draft_id) {
 
   # Return the response content
   log_info("Converting traded draft picks R objects to JSON.")
-  return(jsonlite::fromJSON(content))
+  json <- jsonlite::fromJSON(content)
+
+  log_info("Returning traded draft picks as tibble.")
+  json <- jsonlite::fromJSON(content)
+
+  log_info("Returning traded draft picks as tibble.")
+  return(tibble::as_tibble(json))
 }

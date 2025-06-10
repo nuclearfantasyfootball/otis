@@ -1,11 +1,11 @@
 # Sleeper API Endpoints for Users
 
 # Load required packages
-pacman::p_load(httr, jsonlite, glue)
+# pacman::p_load(httr, jsonlite, glue)
 
 # Helper functions - Remove for package after development
-source("./R/utils_logging.R")
-source("./R/utils_sleeper_api.R")
+# source("./R/utils_logging.R")
+# source("./R/utils_sleeper_api.R")
 
 #' Retrieve User Information from Sleeper API
 #'
@@ -68,5 +68,9 @@ get_user <- function(username = NULL, user_id = NULL) {
 
   # Convert and return JSON
   log_info("Converting user info response to R object.")
-  return(jsonlite::fromJSON(content))
+  json <- jsonlite::fromJSON(content)
+
+  # Convert and return tibble
+  user_tbl <- tibble::as_tibble(as.data.frame(t(json), stringsAsFactors = FALSE))
+  return(user_tbl)
 }
