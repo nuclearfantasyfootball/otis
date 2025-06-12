@@ -168,8 +168,6 @@ get_traded_draft_picks <- function(draft_id) {
   json <- jsonlite::fromJSON(content)
 
   log_info("Returning traded draft picks as tibble.")
-  json <- jsonlite::fromJSON(content)
-
   log_info("Returning traded draft picks as tibble.")
   return(tibble::as_tibble(json))
 }
