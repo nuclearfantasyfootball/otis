@@ -20,8 +20,8 @@ NULL
 #' @export
 #' @examples
 #' \dontrun{
-#' validate_tx_type("trade")    # Returns "trade"
-#' validate_tx_type("invalid")  # Shows message, returns NULL
+#' validate_tx_type("trade") # Returns "trade"
+#' validate_tx_type("invalid") # Shows message, returns NULL
 #' }
 validate_tx_type <- function(tx_type) {
   log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
@@ -46,7 +46,7 @@ validate_tx_type <- function(tx_type) {
     log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
     return(tx_type)
   } else {
-    valid_types_str <- paste(valid_tx_types, collapse = ', ')
+    valid_types_str <- paste(valid_tx_types, collapse = ", ")
     log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
     log_info("Returning NULL (for unfiltered transactions)")
     return(NULL)
@@ -86,14 +86,14 @@ get_specific_league <- function(league_id) {
   # Convert to tibble
   log_debug("Converting R objects to tibble")
   result <- content |>
-    jsonlite::fromJSON() |>
-    tibble::tibble()
+    jsonlite::fromJSON()
+  # tibble::tibble()
 
   # Handle case where there might be nested data
-  if (ncol(result) == 1 && is.list(result[[1]])) {
-    result <- result |>
-      tidyr::unnest_wider(1, names_sep = "_")
-  }
+  # if (ncol(result) == 1 && is.list(result[[1]])) {
+  #   result <- result |>
+  #     tidyr::unnest_wider(1, names_sep = "_")
+  # }
 
   log_info("Successfully retrieved league data for league_id: {league_id}")
   return(result)
@@ -122,11 +122,14 @@ get_league_users <- function(league_id) {
   url <- glue::glue("https://api.sleeper.app/v1/league/{league_id}/users")
   log_info("Fetching all league users from endpoint: {url}")
 
-  response <- tryCatch({
-    httr::GET(url)
-  }, error = function(e) {
-    log_error("Failed to make HTTP request: {e$message}")
-  })
+  response <- tryCatch(
+    {
+      httr::GET(url)
+    },
+    error = function(e) {
+      log_error("Failed to make HTTP request: {e$message}")
+    }
+  )
 
   status_sleeper_api(response)
 
@@ -136,24 +139,26 @@ get_league_users <- function(league_id) {
 
   # Convert to tibble
   log_debug("Converting users response to tibble")
-  users_data <- tryCatch({
-    parsed_data <- jsonlite::fromJSON(content)
+  users_data <- tryCatch(
+    {
+      parsed_data <- jsonlite::fromJSON(content)
 
-    if (length(parsed_data) == 0L) {
-      log_info("No users found for league_id: {league_id}")
-      return(tibble::tibble())
+      if (length(parsed_data) == 0L) {
+        log_info("No users found for league_id: {league_id}")
+        return(tibble::tibble())
+      }
+
+      # Convert to tibble
+      result <- tibble::as_tibble(parsed_data)
+
+      # Add league_id for reference
+      result |>
+        dplyr::mutate(league_id = league_id, .before = 1L)
+    },
+    error = function(e) {
+      log_error("Failed to parse users response: {e$message}")
     }
-
-    # Convert to tibble
-    result <- tibble::as_tibble(parsed_data)
-
-    # Add league_id for reference
-    result |>
-      dplyr::mutate(league_id = league_id, .before = 1L)
-
-  }, error = function(e) {
-    log_error("Failed to parse users response: {e$message}")
-  })
+  )
 
   user_count <- nrow(users_data)
   log_info("Successfully retrieved {user_count} users for league_id: {league_id}")
