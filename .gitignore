@@ -1,0 +1,114 @@
+# ===============================
+# R Project Files
+# ===============================
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+.Rproj.user/
+*.Ruserdata
+*.Rprofile
+.httr-oauth  # OAuth2 token for httr package
+
+# ===============================
+# R Package Development Files
+# ===============================
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# knitr and R markdown cache files
+*_cache/
+/cache/
+*.utf8.md
+*.knit.md
+
+# RStudio Connect folder
+rsconnect/
+
+# translation temp files
+po/*~
+
+# ===============================
+# Project-Specific Directories
+# ===============================
+# Development and playground files
+dev/
+
+# Documentation directories (except README.md)
+doc/*
+docs/
+
+# Output files, figures, etc.
+outputs/
+
+# ===============================
+# Data Management
+# ===============================
+# Data directory - Not tracked by git only mandatory files uploaded
+data/
+
+# ===============================
+# renv Package Management
+# ===============================
+# Keep renv.lock (IMPORTANT for reproducibility)
+# renv.lock should NOT be ignored - it tracks dependency versions
+# renv
+renv/
+renv.lock
+
+# Selectively ignore parts of renv
+renv/library/
+renv/local/
+renv/python/
+renv/staging/
+renv/cache/
+
+# ===============================
+# System Files
+# ===============================
+# macOS
+.DS_Store
+*.DS_Store
+
+# Windows
+Thumbs.db
+
+# ===============================
+# Temporary Files
+# ===============================
+*.swp
+*~
+.~lock.*
+
+# ===============================
+# Environment Variables
+# ===============================
+*.Renviron
+.Renviron
+
+# ===============================
+# IMPORTANT! DO NOT IGNORE THESE FILES:
+# ===============================
+# DO NOT ignore these files:
+# - gerald.Rproj (R project file)
+# - renv.lock (dependency lock file)
+# - R/ directory (R functions)
+# - src/ directory (source code)
+# - tests/ directory (test files)
+# - LICENSE file (license information)

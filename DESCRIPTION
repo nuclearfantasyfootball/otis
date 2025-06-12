@@ -1,0 +1,36 @@
+Package: otis
+Title: Optimization Toolkit Integrating Sleeper (OTIS)
+Version: 0.0.0.9000
+Authors@R: person("Nolan", "MacDonald", email = "nolan@nuclearfantasy.football",
+  role = c("aut", "cre"))
+Description: OTIS integrates Sleeper fantasy football and fantasy analysis with
+    the Sleeper API and capabilities for fantasy football analysis
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    dplyr,
+    glue,
+    httr,
+    jsonlite,
+    logging,
+    purrr,
+    rlang,
+    RSQLite,
+    stringr,
+    tibble,
+    tidyr,
+    usethis
+Suggests:
+    devtools,
+    knitr,
+    rmarkdown,
+    pacman,
+    roxygen2,
+    styler,
+    testthat
+Depends: 
+    R (>= 4.1.0)
+LazyData: true
