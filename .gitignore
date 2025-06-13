@@ -112,3 +112,7 @@ Thumbs.db
 # - src/ directory (source code)
 # - tests/ directory (test files)
 # - LICENSE file (license information)
+.Rproj.user
+.Rdata
+.httr-oauth
+.quarto
