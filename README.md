@@ -9,3 +9,6 @@ Install OTIS from the GitHub repository using:
 install.packages("remotes")
 remotes::install_github("NuclearAnalyticsLab/otis")
 ```
+
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/NuclearAnalyticsLab/otis/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NuclearAnalyticsLab/otis/actions/workflows/R-CMD-check.yaml)
