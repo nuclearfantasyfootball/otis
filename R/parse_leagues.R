@@ -40,15 +40,15 @@
 parse_league_data <- function(league_id) {
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch league data from Sleeper API
-  log_debug("Fetching league data for league_id: {league_id}")
+  otis::log_debug("Fetching league data for league_id: {league_id}")
   league <- otis::get_specific_league(league_id)
 
   # Parse main league data with expanded metadata
-  log_debug("Parsing league data into structured tibble")
+  otis::log_debug("Parsing league data into structured tibble")
   league_data <- tibble::tibble(
     # Basic league information
     name = league$name,
@@ -79,7 +79,7 @@ parse_league_data <- function(league_id) {
     # Message content and timing
     last_message_attachment = league$last_message_attachment,
     last_message_text_map = league$last_message_text_map,
-    last_message_time = convert_sleeper_timestamp(league$last_message_time), # Fixed bug
+    last_message_time = otis::convert_sleeper_timestamp(league$last_message_time), # Fixed bug
 
     # League structure and brackets
     league_id = league$league_id,
@@ -92,7 +92,7 @@ parse_league_data <- function(league_id) {
     total_rosters = league$total_rosters
   )
 
-  log_info("Successfully parsed league data for league: {league$name}")
+  otis::log_info("Successfully parsed league data for league: {league$name}")
   return(league_data)
 }
 
@@ -128,15 +128,15 @@ parse_league_data <- function(league_id) {
 parse_league_settings <- function(league_id) {
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch league data
-  log_debug("Fetching league settings for league_id: {league_id}")
+  otis::log_debug("Fetching league settings for league_id: {league_id}")
   league <- otis::get_specific_league(league_id)
 
   # Transform settings to long format
-  log_debug("Converting league settings to long format")
+  otis::log_debug("Converting league settings to long format")
   league_settings <- league$settings |>
     tibble::as_tibble() |>
     tidyr::pivot_longer(
@@ -145,7 +145,7 @@ parse_league_settings <- function(league_id) {
       values_to = "value"
     )
 
-  log_info("Successfully parsed {nrow(league_settings)} league settings")
+  otis::log_info("Successfully parsed {nrow(league_settings)} league settings")
   return(league_settings)
 }
 
@@ -181,15 +181,15 @@ parse_league_settings <- function(league_id) {
 parse_league_scoring_settings <- function(league_id) {
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch league data
-  log_debug("Fetching league scoring settings for league_id: {league_id}")
+  otis::log_debug("Fetching league scoring settings for league_id: {league_id}")
   league <- otis::get_specific_league(league_id)
 
   # Transform scoring settings to long format
-  log_debug("Converting league scoring settings to long format")
+  otis::log_debug("Converting league scoring settings to long format")
   league_scoring_settings <- league$scoring_settings |>
     tibble::as_tibble() |>
     tidyr::pivot_longer(
@@ -198,7 +198,7 @@ parse_league_scoring_settings <- function(league_id) {
       values_to = "value"
     )
 
-  log_info("Successfully parsed {nrow(league_scoring_settings)} scoring settings")
+  otis::log_info("Successfully parsed {nrow(league_scoring_settings)} scoring settings")
   return(league_scoring_settings)
 }
 
@@ -235,19 +235,19 @@ parse_league_scoring_settings <- function(league_id) {
 parse_league_roster_positions <- function(league_id) {
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
   # Fetch league data
-  log_debug("Fetching league roster positions for league_id: {league_id}")
+  otis::log_debug("Fetching league roster positions for league_id: {league_id}")
   league <- otis::get_specific_league(league_id)
 
   # Summarize roster positions
-  log_debug("Counting roster positions by type")
+  otis::log_debug("Counting roster positions by type")
   league_roster_positions <- tibble::tibble(position = league[["roster_positions"]]) |>
     dplyr::count(position, sort = TRUE)
 
-  log_info("Successfully parsed {nrow(league_roster_positions)} unique roster positions")
+  otis::log_info("Successfully parsed {nrow(league_roster_positions)} unique roster positions")
   return(league_roster_positions)
 }
 
@@ -287,16 +287,16 @@ parse_league_roster_positions <- function(league_id) {
 parse_complete_league_info <- function(league_id) {
   # Input validation
   if (!is.character(league_id) || length(league_id) != 1 || nchar(league_id) == 0) {
-    log_error("league_id must be a non-empty character string")
+    otis::log_error("league_id must be a non-empty character string")
   }
 
-  log_info("Starting complete league info parsing for league_id: {league_id}")
+  otis::log_info("Starting complete league info parsing for league_id: {league_id}")
 
   # Parse all components
-  league_data <- parse_league_data(league_id)
-  settings <- parse_league_settings(league_id)
-  scoring_settings <- parse_league_scoring_settings(league_id)
-  roster_positions <- parse_league_roster_positions(league_id)
+  league_data <- otis::parse_league_data(league_id)
+  settings <- otis::parse_league_settings(league_id)
+  scoring_settings <- otis::parse_league_scoring_settings(league_id)
+  roster_positions <- otis::parse_league_roster_positions(league_id)
 
   # Combine into named list
   complete_info <- list(
@@ -306,6 +306,6 @@ parse_complete_league_info <- function(league_id) {
     roster_positions = roster_positions
   )
 
-  log_info("Successfully parsed complete league information")
+  otis::log_info("Successfully parsed complete league information")
   return(complete_info)
 }

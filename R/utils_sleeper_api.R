@@ -225,3 +225,46 @@ convert_sleeper_timestamps_vectorized <- function(ms_vector,
 
   return(result)
 }
+
+#' Validate transaction type parameter
+#'
+#' Checks if the provided transaction type is valid for Sleeper API
+#'
+#' @param tx_type Character string representing transaction type or NULL.
+#'   Valid values are "waiver", "free_agent", "trade".
+#' @return The original tx_type if valid, or NULL if invalid
+#' @export
+#' @examples
+#' \dontrun{
+#' validate_tx_type("trade") # Returns "trade"
+#' validate_tx_type("invalid") # Shows message, returns NULL
+#' }
+validate_tx_type <- function(tx_type) {
+  log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
+
+  # Input validation
+  if (!rlang::is_null(tx_type)) {
+    if (!is.character(tx_type) || length(tx_type) != 1) {
+      log_error("tx_type must be a single character string or NULL")
+    }
+  }
+
+  # Valid transaction types
+  valid_tx_types <- c("waiver", "free_agent", "trade")
+
+  # Create a validator function
+  is_valid_tx_type <- function(x) {
+    rlang::is_null(x) || (x %in% valid_tx_types)
+  }
+
+  # Check validation and return appropriate value
+  if (is_valid_tx_type(tx_type)) {
+    log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
+    return(tx_type)
+  } else {
+    valid_types_str <- paste(valid_tx_types, collapse = ", ")
+    log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
+    log_info("Returning NULL (for unfiltered transactions)")
+    return(NULL)
+  }
+}
