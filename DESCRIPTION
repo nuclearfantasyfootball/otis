@@ -16,6 +16,7 @@ Imports:
     httr,
     jsonlite,
     logging,
+    lubridate,
     purrr,
     rlang,
     RSQLite,

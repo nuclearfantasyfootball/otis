@@ -18,7 +18,7 @@ Checks if the provided transaction type is valid for Sleeper API
 }
 \examples{
 \dontrun{
-validate_tx_type("trade")    # Returns "trade"
-validate_tx_type("invalid")  # Shows message, returns NULL
+validate_tx_type("trade") # Returns "trade"
+validate_tx_type("invalid") # Shows message, returns NULL
 }
 }
