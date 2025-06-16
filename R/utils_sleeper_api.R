@@ -193,7 +193,7 @@ convert_sleeper_timestamps_vectorized <- function(ms_vector,
                                                   format = "%Y-%m-%d %H:%M:%S %Z") {
   # Input validation
   if (!is.numeric(ms_vector)) {
-    stop("ms_vector must be numeric")
+    stop("'ms_vector' must be a numeric vector")
   }
 
   # Validate timezone
