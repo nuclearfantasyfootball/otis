@@ -1,12 +1,5 @@
 # Sleeper API Endpoints for Users
 
-# Load required packages
-# pacman::p_load(httr, jsonlite, glue)
-
-# Helper functions - Remove for package after development
-# source("./R/utils_logging.R")
-# source("./R/utils_sleeper_api.R")
-
 #' Retrieve User Information from Sleeper API
 #'
 #' @description
