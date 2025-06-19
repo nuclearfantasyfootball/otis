@@ -13,7 +13,8 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' fetch_all_players("./data/raw/sleeper_players")
+#' path_save <- "./data/raw/sleeper_players"
+#' fetch_all_players(path_save)
 #' }
 fetch_all_players <- function(save_path = "./data/raw/sleeper_players") {
   url <- "https://api.sleeper.app/v1/players/nfl"
@@ -54,7 +55,8 @@ fetch_all_players <- function(save_path = "./data/raw/sleeper_players") {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
+#' path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+#' players <- load_all_sleeper_players(path_player_data)
 #' }
 load_all_sleeper_players <- function(file_path) {
   # Check if file exists before loading
@@ -75,7 +77,9 @@ load_all_sleeper_players <- function(file_path) {
 #' @return A character vector of variable names
 #' @export
 #' @examples
+#' \dontrun{
 #' vars <- get_sleeper_player_vars()
+#' }
 get_sleeper_player_vars <- function() {
   # Define list of variable names for all players
   var_list <- c(
@@ -142,8 +146,10 @@ safe_extract <- function(field, players) {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
-#' players_extracted <- extract_player_info(players, "./data/parsed/sleeper_all_players")
+#' path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+#' players <- load_all_sleeper_players(path_player_data)
+#' path_player_data_parsed <- "./data/parsed/sleeper_all_players"
+#' players_extracted <- extract_player_info(players, path_player_data_parsed)
 #' }
 extract_player_info <- function(players, db_path = NULL) {
   log_info("Starting extraction of player information.")
@@ -210,7 +216,8 @@ extract_player_info <- function(players, db_path = NULL) {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_or_fetch_sleeper_players("./data/raw/sleeper_players")
+#' path_player_data <- "./data/raw/sleeper_players"
+#' players <- load_or_fetch_sleeper_players(path_player_data)
 #' }
 load_or_fetch_sleeper_players <- function(save_path = "./data/raw/sleeper_players") {
   # Get current date in desired format
