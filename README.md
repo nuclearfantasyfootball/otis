@@ -1,4 +1,4 @@
-# OTIS
+# OTIS <img src="man/logo/logo.png" align="right" height="200" alt="" />
 
 **OTIS** is an **O**ptimization **T**oolkit **I**ntegrating **S**leeper.
 OTIS is utilized as an R package to pull and parse data from the Sleeper API.
