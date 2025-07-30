@@ -94,7 +94,7 @@ get_league_transactions_season <- function(league_id, tx_type = NULL, .progress 
     consecutive_empty_weeks <- 0
 
     # Add week column to the transactions
-    week_transactions <- week_transactions %>%
+    week_transactions <- week_transactions |>
       mutate(
         week = week,
         .before = 1 # Add week as first column
