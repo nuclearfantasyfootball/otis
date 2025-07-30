@@ -7,7 +7,7 @@
 league_users_details(league_id)
 }
 \arguments{
-\item{league_id}{A character string. The unique ID of the Sleeper league (e.g., \code{"1190192546172342272"}).}
+\item{league_id}{A character string. The unique ID of the Sleeper league (e.g., \code{"111000111000111000"}).}
 }
 \value{
 A tibble with one row per user in the league and expanded columns including:
@@ -31,7 +31,7 @@ and \code{metadata_avatar} fields can be used to generate user image URLs from S
 }
 \examples{
 \dontrun{
-league_id <- "1190192546172342272" # Example Sleeper league ID
+league_id <- "111000111000111000" # Example Sleeper league ID
 users <- league_users_detailed(league_id)
 }
 

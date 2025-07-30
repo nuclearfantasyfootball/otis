@@ -17,6 +17,7 @@ Fetches complete NFL player data from the Sleeper API and saves it as a JSON fil
 }
 \examples{
 \dontrun{
-fetch_all_players("./data/raw/sleeper_players")
+path_save <- "./data/raw/sleeper_players"
+fetch_all_players(path_save)
 }
 }

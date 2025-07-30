@@ -17,6 +17,7 @@ Checks for existing player data for the current date and either loads it or fetc
 }
 \examples{
 \dontrun{
-players <- load_or_fetch_sleeper_players("./data/raw/sleeper_players")
+path_player_data <- "./data/raw/sleeper_players"
+players <- load_or_fetch_sleeper_players(path_player_data)
 }
 }

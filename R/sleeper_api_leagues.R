@@ -34,7 +34,7 @@ get_specific_league <- function(league_id) {
   otis::log_debug("Fetching specific league data from endpoint: {url}")
 
   response <- httr::GET(url)
-  otis::status_sleeper_api(response)
+  status_sleeper_api(response)
 
   # Extract/parse content
   otis::log_debug("Extracting content from request")
@@ -88,7 +88,7 @@ get_league_users <- function(league_id) {
     }
   )
 
-  otis::status_sleeper_api(response)
+  status_sleeper_api(response)
 
   # Extract and parse content
   otis::log_debug("Extracting content from users request")
@@ -146,7 +146,7 @@ get_league_rosters <- function(league_id) {
   otis::log_debug("Fetching all league rosters from endpoint: {url}")
 
   response <- httr::GET(url)
-  otis::status_sleeper_api(response)
+  status_sleeper_api(response)
 
   # Extract/parse content
   otis::log_debug("Extracting content from request")
@@ -198,7 +198,7 @@ get_league_matchups <- function(league_id, week) {
   otis::log_debug("Fetching all league matchups for week {week} from endpoint: {url}")
 
   response <- httr::GET(url)
-  otis::status_sleeper_api(response)
+  status_sleeper_api(response)
 
   # Extract/parse content
   otis::log_debug("Extracting content from request")
@@ -269,7 +269,7 @@ get_league_transactions_week <- function(league_id, week, tx_type = NULL, is_com
   otis::log_debug("Fetching all league transactions for week {week} from endpoint: {url}")
 
   response <- httr::GET(url)
-  otis::status_sleeper_api(response)
+  status_sleeper_api(response)
 
   # Extract/parse content
   otis::log_debug("Extracting content from request")
