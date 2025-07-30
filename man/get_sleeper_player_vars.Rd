@@ -13,5 +13,7 @@ A character vector of variable names
 Returns a character vector of variable names available in the Sleeper player data
 }
 \examples{
+\dontrun{
 vars <- get_sleeper_player_vars()
+}
 }

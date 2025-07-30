@@ -6,7 +6,7 @@
 #' into a clean and detailed tibble. This function is useful for mapping league users
 #' to their display names, team names, and notification preferences.
 #'
-#' @param league_id A character string. The unique ID of the Sleeper league (e.g., `"1190192546172342272"`).
+#' @param league_id A character string. The unique ID of the Sleeper league (e.g., `"111000111000111000"`).
 #'
 #' @return A tibble with one row per user in the league and expanded columns including:
 #' \itemize{
@@ -26,7 +26,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' league_id <- "1190192546172342272" # Example Sleeper league ID
+#' league_id <- "111000111000111000" # Example Sleeper league ID
 #' users <- league_users_detailed(league_id)
 #' }
 #'

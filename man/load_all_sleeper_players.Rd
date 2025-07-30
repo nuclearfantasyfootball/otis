@@ -17,6 +17,7 @@ Loads previously saved Sleeper NFL player data from a JSON file
 }
 \examples{
 \dontrun{
-players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
+path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+players <- load_all_sleeper_players(path_player_data)
 }
 }

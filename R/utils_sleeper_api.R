@@ -9,14 +9,14 @@ status_sleeper_api <- function(response) {
   if (httr::http_error(response)) {
     status_code <- httr::status_code(response)
     error_message <- httr::http_status(response)$message
-    log_error("Sleeper API request failed with status {status_code}. Error: {error_message}")
+    otis::log_error("Sleeper API request failed with status {status_code}. Error: {error_message}")
   }
 
   status_code <- httr::status_code(response)
   if (status_code != 200) {
-    log_warn("Sleeper API returned status {status_code}")
+    otis::log_warn("Sleeper API returned status {status_code}")
   } else {
-    log_debug("Sleeper API request successful (status 200)")
+    otis::log_debug("Sleeper API request successful (status 200)")
   }
 
   invisible(NULL)
@@ -240,12 +240,12 @@ convert_sleeper_timestamps_vectorized <- function(ms_vector,
 #' validate_tx_type("invalid") # Shows message, returns NULL
 #' }
 validate_tx_type <- function(tx_type) {
-  log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
+  otis::log_debug("Starting validate_tx_type with input: {tx_type %||% 'NULL'}")
 
   # Input validation
   if (!rlang::is_null(tx_type)) {
     if (!is.character(tx_type) || length(tx_type) != 1) {
-      log_error("tx_type must be a single character string or NULL")
+      otis::log_error("tx_type must be a single character string or NULL")
     }
   }
 
@@ -259,12 +259,12 @@ validate_tx_type <- function(tx_type) {
 
   # Check validation and return appropriate value
   if (is_valid_tx_type(tx_type)) {
-    log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
+    otis::log_debug("Transaction type validation successful: {tx_type %||% 'NULL'}")
     return(tx_type)
   } else {
     valid_types_str <- paste(valid_tx_types, collapse = ", ")
-    log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
-    log_info("Returning NULL (for unfiltered transactions)")
+    otis::log_warn("Invalid transaction type: '{tx_type}'. Must be one of: {valid_types_str}")
+    otis::log_info("Returning NULL (for unfiltered transactions)")
     return(NULL)
   }
 }

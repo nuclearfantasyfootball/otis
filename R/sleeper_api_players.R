@@ -1,9 +1,6 @@
 # Sleeper API Player Data
 # Warning! All player data should be fetched sparingly. The file is ~15 mb.
 
-# Load required packages
-# pacman::p_load(httr, jsonlite, dplyr, glue, progress, tibble, purrr, RSQLite)
-
 # Helper functions - Remove for package after development
 # source("./R/utils_logging.R")
 # source("./R/utils_sleeper_api.R")
@@ -16,7 +13,8 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' fetch_all_players("./data/raw/sleeper_players")
+#' path_save <- "./data/raw/sleeper_players"
+#' fetch_all_players(path_save)
 #' }
 fetch_all_players <- function(save_path = "./data/raw/sleeper_players") {
   url <- "https://api.sleeper.app/v1/players/nfl"
@@ -57,7 +55,8 @@ fetch_all_players <- function(save_path = "./data/raw/sleeper_players") {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
+#' path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+#' players <- load_all_sleeper_players(path_player_data)
 #' }
 load_all_sleeper_players <- function(file_path) {
   # Check if file exists before loading
@@ -78,23 +77,26 @@ load_all_sleeper_players <- function(file_path) {
 #' @return A character vector of variable names
 #' @export
 #' @examples
+#' \dontrun{
 #' vars <- get_sleeper_player_vars()
+#' }
 get_sleeper_player_vars <- function() {
   # Define list of variable names for all players
-  var_list <- c("full_name", "first_name", "last_name",
-                "position", # "fantasy_positions",
-                "metadata$channel_id", "metadata$rookie_year",
-                "high_school", "college", "team", "team_abbr", "team_changed_at",
-                "age", "years_exp", "height", "weight", "number",
-                "birth_date", "birth_state", "birth_city", "birth_country",
-                "search_full_name", "search_first_name", "search_last_name",
-                "search_rank", "depth_chart_order", "depth_chart_position",
-                "injury_status", "injury_body_part", "injury_notes", "injury_start_date",
-                "news_updated", "practice_participation", "practice_description",
-                "competitions", "status", "active", "hashtag", "sport",
-                "sportradar_id", "player_id", "espn_id", "rotowire_id", "swish_id",
-                "gsis_id", "yahoo_id", "rotoworld_id", "stats_id", "oddsjam_id",
-                "fantasy_data_id", "pandascore_id", "opta_id"
+  var_list <- c(
+    "full_name", "first_name", "last_name",
+    "position", # "fantasy_positions",
+    "metadata$channel_id", "metadata$rookie_year",
+    "high_school", "college", "team", "team_abbr", "team_changed_at",
+    "age", "years_exp", "height", "weight", "number",
+    "birth_date", "birth_state", "birth_city", "birth_country",
+    "search_full_name", "search_first_name", "search_last_name",
+    "search_rank", "depth_chart_order", "depth_chart_position",
+    "injury_status", "injury_body_part", "injury_notes", "injury_start_date",
+    "news_updated", "practice_participation", "practice_description",
+    "competitions", "status", "active", "hashtag", "sport",
+    "sportradar_id", "player_id", "espn_id", "rotowire_id", "swish_id",
+    "gsis_id", "yahoo_id", "rotoworld_id", "stats_id", "oddsjam_id",
+    "fantasy_data_id", "pandascore_id", "opta_id"
   )
 
   log_info("Pulling list of all players variables names.")
@@ -120,11 +122,15 @@ safe_extract <- function(field, players) {
     # Traverse the nested structure step by step
     for (part in field_parts) {
       val <- val[[part]]
-      if (is.null(val)) return(NA_character_)  # Return NA if field is missing
+      if (is.null(val)) {
+        return(NA_character_)
+      } # Return NA if field is missing
     }
 
     # If the value is empty, return NA
-    if (length(val) == 0) return(NA_character_)
+    if (length(val) == 0) {
+      return(NA_character_)
+    }
 
     # Convert to character for consistent return type
     as.character(val)
@@ -140,8 +146,10 @@ safe_extract <- function(field, players) {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
-#' players_extracted <- extract_player_info(players, "./data/parsed/sleeper_all_players")
+#' path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+#' players <- load_all_sleeper_players(path_player_data)
+#' path_player_data_parsed <- "./data/parsed/sleeper_all_players"
+#' players_extracted <- extract_player_info(players, path_player_data_parsed)
 #' }
 extract_player_info <- function(players, db_path = NULL) {
   log_info("Starting extraction of player information.")
@@ -164,8 +172,8 @@ extract_player_info <- function(players, db_path = NULL) {
     total = length(player_vars),
     clear = FALSE,
     width = 80,
-    complete = "\U0001F7E9",  # Green square unicode
-    incomplete = "\U0001F7E5"  # Red square unicode
+    complete = "\U0001F7E9", # Green square unicode
+    incomplete = "\U0001F7E5" # Red square unicode
   )
 
   # Iterate through variables and extract with progress updates
@@ -181,7 +189,7 @@ extract_player_info <- function(players, db_path = NULL) {
 
   n_vars <- length(result)
 
-  success_str = glue::glue("Successfully extracted all player data.\nExtracted {n_vars} variables for {n_players} players.")
+  success_str <- glue::glue("Successfully extracted all player data.\nExtracted {n_vars} variables for {n_players} players.")
   log_info(success_str)
 
   if (is.null(db_path)) {
@@ -208,7 +216,8 @@ extract_player_info <- function(players, db_path = NULL) {
 #' @export
 #' @examples
 #' \dontrun{
-#' players <- load_or_fetch_sleeper_players("./data/raw/sleeper_players")
+#' path_player_data <- "./data/raw/sleeper_players"
+#' players <- load_or_fetch_sleeper_players(path_player_data)
 #' }
 load_or_fetch_sleeper_players <- function(save_path = "./data/raw/sleeper_players") {
   # Get current date in desired format
@@ -262,4 +271,3 @@ get_trending_players <- function(type, lookback_hours = 24, limit = 25) {
   log_info("Converting trending players R objects to JSON.")
   return(jsonlite::fromJSON(content))
 }
-

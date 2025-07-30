@@ -19,7 +19,9 @@ Extracts player information from a nested list structure into a structured tibbl
 }
 \examples{
 \dontrun{
-players <- load_all_sleeper_players("./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json")
-players_extracted <- extract_player_info(players, "./data/parsed/sleeper_all_players")
+path_player_data <- "./data/raw/sleeper_players/sleeper_player_data_2025_MAY_14.json"
+players <- load_all_sleeper_players(path_player_data)
+path_player_data_parsed <- "./data/parsed/sleeper_all_players"
+players_extracted <- extract_player_info(players, path_player_data_parsed)
 }
 }
