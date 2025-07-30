@@ -1,6 +1,19 @@
 # Pull Sleeper League Data
 # Functions to return clean/parsed Sleeper API data
 
+#' @importFrom httr GET content http_error status_code http_status
+#' @importFrom jsonlite fromJSON
+#' @importFrom tibble tibble
+#' @importFrom tidyr unnest_wider
+#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr filter
+#' @importFrom dplyr everything
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr mutate
+#' @importFrom rlang is_null
+#' @importFrom glue glue
+NULL
+
 #' Pull Sleeper League Data into Structured Format
 #'
 #' Retrieves and parses Sleeper league data into a comprehensive tibble with
