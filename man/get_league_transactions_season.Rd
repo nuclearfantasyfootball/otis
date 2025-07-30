@@ -8,7 +8,7 @@ get_league_transactions_season(
   league_id,
   tx_type = NULL,
   .progress = TRUE,
-  max_weeks = 20
+  max_weeks = 18
 )
 }
 \arguments{
