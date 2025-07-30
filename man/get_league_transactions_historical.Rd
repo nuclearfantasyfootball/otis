@@ -40,7 +40,7 @@ Results are combined with season and league identification information.
 \examples{
 \dontrun{
 # Get all transactions for all historical seasons
-all_transactions <- get_league_transactions_all_seasons("123456789")
+all_transactions <- get_league_transactions_historical("123456789")
 }
 
 }
