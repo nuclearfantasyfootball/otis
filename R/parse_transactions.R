@@ -27,7 +27,7 @@
 #' }
 #'
 #' @export
-get_league_transactions_season <- function(league_id, tx_type = NULL, .progress = TRUE, max_weeks = 20) {
+get_league_transactions_season <- function(league_id, tx_type = NULL, .progress = TRUE, max_weeks = 18) {
   # Input validation
   if (missing(league_id) || is.null(league_id) || !is.character(league_id)) {
     stop("league_id must be a non-null character string")
