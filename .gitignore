@@ -47,8 +47,9 @@ po/*~
 # ===============================
 # Project-Specific Directories
 # ===============================
-# Development and playground files
+# Development and sandbox files
 dev/
+sandbox/
 
 # Documentation directories (except README.md)
 doc/*
